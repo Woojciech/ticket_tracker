@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -40,7 +42,18 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     @Transactional
-    public List<Ticket> findAllTickets() {
+    public List<Ticket> getAllTickets() {
         return null;
+    }
+
+    @Override
+    @Transactional
+    public List<Ticket> getLimitedTicketsByCompletion(int limit) {
+        List<Ticket> completed = ticketDAO.getLimitedTicketsByCompletion(true, limit);
+        List<Ticket> uncompleted = ticketDAO.getLimitedTicketsByCompletion(false, limit);
+
+        List<Ticket> mergedTickets = Stream.concat(completed.stream(), uncompleted.stream()).collect(Collectors.toList());
+
+        return mergedTickets;
     }
 }

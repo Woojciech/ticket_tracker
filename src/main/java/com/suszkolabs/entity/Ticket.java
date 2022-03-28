@@ -22,15 +22,20 @@ public class Ticket {
     @Column(name = "date_added")
     private Date dateAdded;
 
+    //TODO think about fetch type (eager, lazy etc)
     // surely dont want to remove the entire unit when removing the ticket
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "unit_id")
     private Unit relatedUnit;
 
+    @Column(name = "is_completed")
+    private boolean isCompleted;
+
     public Ticket(){
 
     }
 
+    //TODO work on date formatting (time has to be displayed)
     public Ticket(String title, String description){
         this.title = title;
         this.description = description;
@@ -38,6 +43,14 @@ public class Ticket {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
         Date date = new Date(System.currentTimeMillis());
         this.dateAdded = date;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 
     public int getId() {

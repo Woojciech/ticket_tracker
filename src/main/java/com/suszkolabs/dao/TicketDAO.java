@@ -9,5 +9,6 @@ public interface TicketDAO {
     Ticket findTicketById(int ticketId);
     void updateTicket(Ticket ticket);
     void deleteTicket(int ticketId);
-    List<Ticket> findAllTickets();
+    List<Ticket> getAllTickets();
+    List<Ticket> getLimitedTicketsByCompletion(boolean isCompleted, int limit);
 }

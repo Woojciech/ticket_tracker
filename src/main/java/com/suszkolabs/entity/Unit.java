@@ -21,12 +21,14 @@ public class Unit {
     @Column(name = "description")
     private String description;
 
+    //TODO set up fetch types
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "relatedUnit")
     private List<Ticket> relatedTickets;
 
     public Unit(){
 
     }
+
 
     public Unit(String name, String description){
         this.name = name;

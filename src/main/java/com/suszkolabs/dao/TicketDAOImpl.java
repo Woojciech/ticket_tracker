@@ -1,10 +1,13 @@
 package com.suszkolabs.dao;
 
 import com.suszkolabs.entity.Ticket;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -34,7 +37,26 @@ public class TicketDAOImpl implements TicketDAO {
     }
 
     @Override
-    public List<Ticket> findAllTickets() {
-        return null;
+    public List<Ticket> getAllTickets() {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        List<Ticket> tickets = currentSession.createQuery("from Ticket").getResultList();
+
+        return tickets;
+    }
+
+    @Override
+    @Transactional
+    public List<Ticket> getLimitedTicketsByCompletion(boolean isCompleted, int limit) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        // fetch limited number of queries dependent on their completion type
+        Query<Ticket> query = currentSession.createQuery("from Ticket t where t.isCompleted = :isCompleted");
+        query.setParameter("isCompleted", isCompleted);
+        query.setMaxResults(limit);
+
+        List<Ticket> tickets = query.getResultList();
+
+        return tickets;
     }
 }
