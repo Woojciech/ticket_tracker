@@ -1,39 +1,45 @@
-package com.suszkolabs.dao;
+package com.suszkolabs.service;
 
+import com.suszkolabs.dao.TicketDAO;
 import com.suszkolabs.entity.Ticket;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
-@Repository
-public class TicketDAOImpl implements TicketDAO {
+@Service
+public class TicketServiceImpl implements TicketService {
 
     @Autowired
-    private SessionFactory sessionFactory;
+    private TicketDAO ticketDAO;
 
     @Override
+    @Transactional
     public void saveTicket(Ticket ticket) {
 
     }
 
     @Override
+    @Transactional
     public Ticket findTicketById(int ticketId) {
         return null;
     }
 
     @Override
+    @Transactional
     public void updateTicket(Ticket ticket) {
 
     }
 
     @Override
+    @Transactional
     public void deleteTicket(int ticketId) {
 
     }
 
     @Override
+    @Transactional
     public List<Ticket> findAllTickets() {
         return null;
     }

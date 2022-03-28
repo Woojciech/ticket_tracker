@@ -12,5 +12,39 @@
 </head>
 <body>
     <h1>Welcome to dashboard!</h1>
+
+
+    <div>
+        <h2>Navigation bar</h2>
+        <ul>
+            <li><a href="">dashboard</a></li>
+            <li><a href="#">active</a></li>
+            <li><a href="#">completed</a></li>
+            <li><a href="#">units</a></li>
+        </ul>
+    </div>
+
+    <div>
+        <h1>Recently added tickets</h1>
+        <table>
+            <thead>
+                <tr>title</tr>
+                <tr>description</tr>
+                <tr>post date</tr>
+                <tr>associated unit</tr>
+            </thead>
+        </table>
+
+        <h1>Recently completed tickets</h1>
+        <table>
+            <thead>
+                <tr>title</tr>
+                <tr>description</tr>
+                <tr>post date</tr>
+                <tr>associated unit</tr>
+            </thead>
+        </table>
+    </div>
+
 </body>
 </html>

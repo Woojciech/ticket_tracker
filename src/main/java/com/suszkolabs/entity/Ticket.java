@@ -24,6 +24,7 @@ public class Ticket {
 
     // surely dont want to remove the entire unit when removing the ticket
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "unit_id")
     private Unit relatedUnit;
 
     public Ticket(){
