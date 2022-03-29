@@ -1,7 +1,9 @@
 package com.suszkolabs.dao;
 
 import com.suszkolabs.entity.Unit;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +36,11 @@ public class UnitDAOImpl implements UnitDAO {
     }
 
     @Override
-    public List<Unit> findAllUnits() {
-        return null;
+    public List<Unit> getAllUnits() {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Unit> query = currentSession.createQuery("from Unit");
+
+        return query.getResultList();
     }
 }

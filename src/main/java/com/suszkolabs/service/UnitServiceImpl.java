@@ -39,7 +39,8 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     @Transactional
-    public List<Unit> findAllUnits() {
-        return null;
+    public List<Unit> getAllUnits() {
+        return unitDAO.getAllUnits();
     }
+
 }

@@ -12,5 +12,5 @@ public interface TicketService {
     void deleteTicket(int ticketId);
     List<Ticket> getAllTickets();
     List<Ticket> getLimitedTicketsByCompletion(int limit);
-
+    List<Ticket> getTicketsByCompletion(boolean isCompleted);
 }

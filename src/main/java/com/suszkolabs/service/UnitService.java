@@ -10,6 +10,6 @@ public interface UnitService {
     Unit findUnitById(int unitId);
     void updateUnit(Unit unit);
     void deleteUnit(int unitId);
-    List<Unit> findAllUnits();
+    List<Unit> getAllUnits();
 
 }

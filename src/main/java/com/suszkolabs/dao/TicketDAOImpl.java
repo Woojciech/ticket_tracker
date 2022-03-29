@@ -13,12 +13,15 @@ import java.util.List;
 @Repository
 public class TicketDAOImpl implements TicketDAO {
 
+    //TODO test DAO
     @Autowired
     private SessionFactory sessionFactory;
 
     @Override
     public void saveTicket(Ticket ticket) {
+        Session currentSession = sessionFactory.getCurrentSession();
 
+        currentSession.save(ticket);
     }
 
     @Override
@@ -58,5 +61,15 @@ public class TicketDAOImpl implements TicketDAO {
         List<Ticket> tickets = query.getResultList();
 
         return tickets;
+    }
+
+    @Override
+    public List<Ticket> getTicketsByCompletion(boolean isCompleted) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Ticket> query = currentSession.createQuery("from Ticket where isCompleted = :isCompleted");
+        query.setParameter("isCompleted", isCompleted);
+
+        return query.getResultList();
     }
 }

@@ -19,7 +19,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public void saveTicket(Ticket ticket) {
-
+        ticketDAO.saveTicket(ticket);
     }
 
     @Override
@@ -55,5 +55,11 @@ public class TicketServiceImpl implements TicketService {
         List<Ticket> mergedTickets = Stream.concat(completed.stream(), uncompleted.stream()).collect(Collectors.toList());
 
         return mergedTickets;
+    }
+
+    @Override
+    @Transactional
+    public List<Ticket> getTicketsByCompletion(boolean isCompleted) {
+        return ticketDAO.getTicketsByCompletion(isCompleted);
     }
 }

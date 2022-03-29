@@ -20,7 +20,7 @@ public class Ticket {
     private String description;
 
     @Column(name = "date_added")
-    private Date dateAdded;
+    private String dateAdded;
 
     //TODO think about fetch type (eager, lazy etc)
     // surely dont want to remove the entire unit when removing the ticket
@@ -39,9 +39,12 @@ public class Ticket {
     public Ticket(String title, String description){
         this.title = title;
         this.description = description;
+        setDateNow();
+    }
 
+    public void setDateNow(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-        Date date = new Date(System.currentTimeMillis());
+        String date = dateFormat.format(new Date(System.currentTimeMillis()));
         this.dateAdded = date;
     }
 
@@ -77,11 +80,11 @@ public class Ticket {
         this.description = description;
     }
 
-    public Date getDateAdded() {
+    public String getDateAdded() {
         return dateAdded;
     }
 
-    public void setDateAdded(Date dateAdded) {
+    public void setDateAdded(String dateAdded) {
         this.dateAdded = dateAdded;
     }
 

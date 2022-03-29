@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <title>Dashboard</title>
@@ -19,13 +20,14 @@
         <h2>Navigation bar</h2>
         <ul>
             <li><a href="">dashboard</a></li>
-            <li><a href="#">active</a></li>
-            <li><a href="#">completed</a></li>
+            <li><a href="active">active</a></li>
+            <li><a href="completed">completed</a></li>
             <li><a href="#">units</a></li>
         </ul>
     </div>
 
     <!-- TODO repair tables -->
+    <!-- TODO add logic to move ticket from active to completed and vice versa -->
     <div>
         <h1>Recently added tickets</h1>
         <table>
