@@ -22,7 +22,7 @@ public class Unit {
     private String description;
 
     //TODO set up fetch types
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "relatedUnit")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "relatedUnit")
     private List<Ticket> relatedTickets;
 
     public Unit(){

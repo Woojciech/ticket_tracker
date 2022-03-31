@@ -12,4 +12,8 @@ public interface UnitDAO {
     void deleteUnit(int unitId);
     List<Unit> getAllUnits();
 
+    // eager fetch
+    Unit findUnitByIdEager(int unitId);
+    List<Unit> getAllUnitsEager();
+
 }

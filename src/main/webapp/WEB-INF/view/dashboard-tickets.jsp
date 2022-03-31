@@ -15,14 +15,14 @@
 <body>
     <h1>Welcome to dashboard!</h1>
 
-
+    <!-- TODO add switch in the corner between ticket/unit dashboard -->
     <div>
         <h2>Navigation bar</h2>
         <ul>
             <li><a href="">dashboard</a></li>
-            <li><a href="active">active</a></li>
-            <li><a href="completed">completed</a></li>
-            <li><a href="#">units</a></li>
+            <li><a href="active">active tickets</a></li>
+            <li><a href="completed">completed tickets</a></li>
+            <li><a href="units">units</a></li>
             <li><a href="add">New ticket</a></li>
         </ul>
     </div>

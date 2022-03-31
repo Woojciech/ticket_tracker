@@ -27,6 +27,12 @@ public class UnitServiceImpl implements UnitService {
 
     @Override
     @Transactional
+    public Unit findUnitByIdEager(int unitId) {
+        return unitDAO.findUnitByIdEager(unitId);
+    }
+
+    @Override
+    @Transactional
     public void updateUnit(Unit unit) {
 
     }
@@ -41,6 +47,13 @@ public class UnitServiceImpl implements UnitService {
     @Transactional
     public List<Unit> getAllUnits() {
         return unitDAO.getAllUnits();
+    }
+
+    // eager fetch is optional
+    @Override
+    @Transactional
+    public List<Unit> getAllUnitsEager() {
+        return unitDAO.getAllUnitsEager();
     }
 
 }

@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/tickets")
@@ -40,7 +36,7 @@ public class TicketController {
     @GetMapping ("/dashboard")
     public String showDashboard(Model model){
         model.addAttribute("dashboardTickets", ticketService.getLimitedTicketsByCompletion(3));
-        return "dashboard";
+        return "dashboard-tickets";
     }
 
     @GetMapping("/active")
@@ -72,6 +68,7 @@ public class TicketController {
         return "ticket-form";
     }
 
+    //TODO - to much logic in a controller?
     //TODO - mechanism does not work properly, units should be fetched differently
     @PostMapping("/add")
     public String addTicketProcess(Model model, @Valid @ModelAttribute("ticket") Ticket ticket, BindingResult bindingResult, HttpServletRequest request){
@@ -97,12 +94,16 @@ public class TicketController {
         return "redirect:" + trimmedRedirectUrl;
     }
 
-    /*
-    @PostMapping("/add")
-    public String addTicket(Model model){
-        model.addAttribute("ticket", new Ticket());
-        return "ticket-form";
+    @GetMapping("/units")
+    public String showUnits(Model model){
+        model.addAttribute("units", unitService.getAllUnits());
+        return "display-units";
     }
-     */
+
+    @GetMapping("/units/unit")
+    public String showUnit(@RequestParam(value = "id") int id, Model model){
+        model.addAttribute("unit", unitService.findUnitByIdEager(id));
+        return "unit-details";
+    }
 
 }
