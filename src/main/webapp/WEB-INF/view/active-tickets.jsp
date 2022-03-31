@@ -17,7 +17,16 @@
 
     <div>
         <h1>Your active tickets</h1>
-        <a href="add">New ticket</a>
+        <div>
+            <h2>Navigation bar</h2>
+            <ul>
+                <li><a href="dashboard">dashboard</a></li>
+                <li><a href="">active</a></li>
+                <li><a href="completed">completed</a></li>
+                <li><a href="#">units</a></li>
+                <li><a href="add">New ticket</a></li>
+            </ul>
+        </div>
         <table>
             <thead>
             <tr>

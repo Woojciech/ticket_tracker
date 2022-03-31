@@ -22,7 +22,7 @@ public class UnitServiceImpl implements UnitService {
     @Override
     @Transactional
     public Unit findUnitById(int unitId) {
-        return null;
+        return unitDAO.findUnitById(unitId);
     }
 
     @Override

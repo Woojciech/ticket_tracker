@@ -23,6 +23,7 @@
             <li><a href="active">active</a></li>
             <li><a href="completed">completed</a></li>
             <li><a href="#">units</a></li>
+            <li><a href="add">New ticket</a></li>
         </ul>
     </div>
 

@@ -5,27 +5,37 @@ import com.suszkolabs.entity.Unit;
 import com.suszkolabs.service.TicketService;
 import com.suszkolabs.service.UnitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/tickets")
 public class TicketController {
 
     //TODO make a limit as an user-defined option
+    //TODO add checkboxes responsible for completion/incompletion of certain tickets
 
     @Autowired
     private TicketService ticketService;
     @Autowired
     private UnitService unitService;
+
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder){
+        StringTrimmerEditor stringTrimmer = new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class, stringTrimmer);
+    }
 
     @GetMapping ("/dashboard")
     public String showDashboard(Model model){
@@ -46,24 +56,45 @@ public class TicketController {
     }
 
     @GetMapping("/add")
-    public String addTicket(Model model){
-        model.addAttribute("ticket", new Ticket());
+    public String addTicket(Model model, HttpServletRequest request){
+
+        // session attribute which indicates page the request is coming from - used in later redirects
+        request.getSession().setAttribute("ticketAddReferer", request.getHeader("Referer"));
+
+        // create ticket
+        Ticket ticket = new Ticket();
+        // set empty unit in order to map later within form
+        ticket.setRelatedUnit(new Unit());
+
+        // form object binding attributes
+        model.addAttribute("ticket", ticket);
         model.addAttribute("units", unitService.getAllUnits());
         return "ticket-form";
     }
 
     //TODO - mechanism does not work properly, units should be fetched differently
     @PostMapping("/add")
-    public String addTicketProcess(@ModelAttribute("ticket") Ticket ticket, BindingResult bindingResult, HttpServletRequest request){
-        if(bindingResult.hasErrors())
-            return "redirect:/tickets/add";
-
-        String previousUrl = request.getHeader("Referer");
-        String trimmedPreviousUrl = previousUrl.split(request.getContextPath())[1];
-
+    public String addTicketProcess(Model model, @Valid @ModelAttribute("ticket") Ticket ticket, BindingResult bindingResult, HttpServletRequest request){
+        if(bindingResult.hasErrors()) {
+            // units are fetched on each error, it is by no means an optimal solution, is there a way to avoid it?
+            model.addAttribute("units", unitService.getAllUnits());
+            return "ticket-form";
+        }
         ticket.setDateNow();
+
+        // form binds actual unitId to new Unit object passed in "addTicket" (GET request)
+        // then the id is used to fetch the entire Unit from the database
+        // ticket "relatedUnit" field is set to fetched Unit
+        int unitId = ticket.getRelatedUnit().getId();
+        ticket.setRelatedUnit(unitService.findUnitById(unitId));
         ticketService.saveTicket(ticket);
-        return "redirect:/" + trimmedPreviousUrl;
+
+
+        String absoluteRedirectUrl = (String) request.getSession().getAttribute("ticketAddReferer");
+        String trimmedRedirectUrl = absoluteRedirectUrl.split(request.getContextPath())[1];
+        request.getSession().removeAttribute("ticketAddReferer");
+
+        return "redirect:" + trimmedRedirectUrl;
     }
 
     /*

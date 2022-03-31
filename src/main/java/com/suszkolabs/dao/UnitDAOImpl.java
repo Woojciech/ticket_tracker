@@ -22,7 +22,12 @@ public class UnitDAOImpl implements UnitDAO {
 
     @Override
     public Unit findUnitById(int unitId) {
-        return null;
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Unit> query = currentSession.createQuery("from Unit u where u.id=:id");
+        query.setParameter("id", unitId);
+
+        return query.getSingleResult();
     }
 
     @Override

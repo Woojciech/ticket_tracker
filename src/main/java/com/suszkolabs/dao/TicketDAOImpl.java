@@ -54,7 +54,7 @@ public class TicketDAOImpl implements TicketDAO {
         Session currentSession = sessionFactory.getCurrentSession();
 
         // fetch limited number of queries dependent on their completion type
-        Query<Ticket> query = currentSession.createQuery("from Ticket t where t.isCompleted = :isCompleted");
+        Query<Ticket> query = currentSession.createQuery("from Ticket t where t.isCompleted = :isCompleted order by dateAdded desc");
         query.setParameter("isCompleted", isCompleted);
         query.setMaxResults(limit);
 

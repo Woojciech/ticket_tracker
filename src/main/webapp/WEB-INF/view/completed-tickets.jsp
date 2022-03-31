@@ -16,6 +16,18 @@
 
     <div>
         <h1>Your completed tickets</h1>
+
+        <div>
+            <h2>Navigation bar</h2>
+            <ul>
+                <li><a href="dashboard">dashboard</a></li>
+                <li><a href="active">active</a></li>
+                <li><a href="">completed</a></li>
+                <li><a href="#">units</a></li>
+                <li><a href="add">New ticket</a></li>
+            </ul>
+        </div>
+
         <table>
             <thead>
             <tr>

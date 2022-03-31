@@ -1,6 +1,9 @@
 package com.suszkolabs.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
@@ -14,9 +17,13 @@ public class Ticket {
     private int id;
 
     @Column(name = "title")
+    @NotNull(message = "is required")
+    @Size(min = 1, message = "is required")
     private String title;
 
     @Column(name = "description")
+    @NotNull(message = "is required")
+    @Size(min = 1, message = "is required")
     private String description;
 
     @Column(name = "date_added")
@@ -43,7 +50,7 @@ public class Ticket {
     }
 
     public void setDateNow(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = dateFormat.format(new Date(System.currentTimeMillis()));
         this.dateAdded = date;
     }

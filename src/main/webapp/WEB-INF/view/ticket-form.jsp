@@ -1,4 +1,4 @@
-<%--
+<%@ page import="com.suszkolabs.dao.UnitDAOImpl" %><%--
   Created by IntelliJ IDEA.
   User: wojte
   Date: 29.03.2022
@@ -17,13 +17,14 @@
         Title: <form:input path="title"/>
         <form:errors path="title"/>
 
-        Title: <form:input path="description"/>
+        Description: <form:input path="description"/>
         <form:errors path="description"/>
 
+        <!-- TODO - object binding does not work :( - converter may be a solution (but how to use one) -->
         Related Unit:
-        <form:select path="relatedUnit">
+        <form:select path="relatedUnit.id">
             <c:forEach var="unit" items="${units}">
-                <form:option value="${unit}" label="${unit.name}"/>
+                <form:option value="${unit.id}" label="${unit.name}"/>
             </c:forEach>
         </form:select>
 
@@ -37,5 +38,7 @@
 
         <input type="submit" value="New Ticket"/>
     </form:form>
+
+    <a href="${pageContext.request.getHeader("Referer")}">Back</a>
 </body>
 </html>
