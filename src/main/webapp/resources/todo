@@ -1,0 +1,12 @@
+1. email sender, alert when there are many incompleted tickets within 7 days
+2. add support for deleting/completing many tickets
+3. add support for updating tickets
+4. add support for pagination
+5. add support for sorting tickets
+6. add support for searching tickets
+7. add support for adding units
+8. add support for deleting units
+9. add support for updating units
+10. generate weekly reports
+11. add employees
+12. create rest api

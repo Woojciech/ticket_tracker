@@ -17,7 +17,8 @@ public class UnitDAOImpl implements UnitDAO {
 
     @Override
     public void saveUnit(Unit unit) {
-
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.save(unit);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class UnitDAOImpl implements UnitDAO {
     public Unit findUnitByIdEager(int unitId) {
         Session currentSession = sessionFactory.getCurrentSession();
 
-        Query<Unit> query = currentSession.createQuery("from Unit u join fetch u.relatedTickets where u.id=:id");
+        Query<Unit> query = currentSession.createQuery("from Unit u left join fetch u.relatedTickets where u.id=:id");
         query.setParameter("id", unitId);
 
         return query.getSingleResult();
@@ -63,7 +64,7 @@ public class UnitDAOImpl implements UnitDAO {
     public List<Unit> getAllUnitsEager() {
         Session currentSession = sessionFactory.getCurrentSession();
 
-        Query<Unit> query = currentSession.createQuery("from Unit u join fetch u.relatedTickets");
+        Query<Unit> query = currentSession.createQuery("from Unit u left join fetch u.relatedTickets");
 
         return query.getResultList();
     }

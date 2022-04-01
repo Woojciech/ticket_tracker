@@ -106,4 +106,18 @@ public class TicketController {
         return "unit-details";
     }
 
+    @GetMapping("/units/add")
+    public String addUnit(Model model){
+        model.addAttribute("unit", new Unit());
+        return "unit-form";
+    }
+
+    @PostMapping("/units/add")
+    public String addUnitProcess(@Valid @ModelAttribute("unit") Unit unit, BindingResult bindingResult){
+        if(bindingResult.hasErrors())
+            return "unit-form";
+
+        unitService.saveUnit(unit);
+        return "redirect:/tickets/units/unit?id=" + unit.getId();
+    }
 }

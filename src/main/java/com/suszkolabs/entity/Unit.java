@@ -3,6 +3,8 @@ package com.suszkolabs.entity;
 import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +18,13 @@ public class Unit {
     private int id;
 
     @Column(name = "name")
+    @NotNull(message = "is required")
+    @Size(min = 1, message = "is required")
     private String name;
 
     @Column(name = "description")
+    @NotNull(message = "is required")
+    @Size(min = 1, message = "is required")
     private String description;
 
     //TODO set up fetch types

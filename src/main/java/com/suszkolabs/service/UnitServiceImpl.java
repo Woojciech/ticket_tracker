@@ -16,7 +16,7 @@ public class UnitServiceImpl implements UnitService {
     @Override
     @Transactional
     public void saveUnit(Unit unit) {
-
+        unitDAO.saveUnit(unit);
     }
 
     @Override

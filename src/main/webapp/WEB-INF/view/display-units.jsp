@@ -15,6 +15,7 @@
 
     <div>
         <h1>Your Units</h1>
+        <a href="units/add">New Unit</a>
         <ul>
             <c:forEach var="unit" items="${units}">
                 <li><a href="units/unit?id=${unit.id}">${unit.name}</a></li>

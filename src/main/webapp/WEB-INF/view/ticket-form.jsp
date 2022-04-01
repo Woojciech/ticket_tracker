@@ -14,6 +14,8 @@
 </head>
 <body>
     <form:form action="${pageContext.request.contextPath}/tickets/add" method="post" modelAttribute="ticket">
+        <form:hidden path="id"/>
+
         Title: <form:input path="title"/>
         <form:errors path="title"/>
 
@@ -36,7 +38,7 @@
             <form:option value="false" label="active"/>
         </form:select>
 
-        <input type="submit" value="New Ticket"/>
+        <input type="submit" value="Save"/>
     </form:form>
 
     <a href="${pageContext.request.getHeader("Referer")}">Back</a>
