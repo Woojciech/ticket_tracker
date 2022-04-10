@@ -25,7 +25,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public Ticket findTicketById(int ticketId) {
-        return null;
+        return ticketDAO.findTicketById(ticketId);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public void deleteTicket(int ticketId) {
-
+        ticketDAO.deleteTicket(ticketId);
     }
 
     @Override

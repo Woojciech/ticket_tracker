@@ -4,6 +4,7 @@ import com.suszkolabs.entity.Ticket;
 import com.suszkolabs.entity.Unit;
 import com.suszkolabs.service.TicketService;
 import com.suszkolabs.service.UnitService;
+import com.suszkolabs.utils.IdCheckboxWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/tickets")
@@ -42,8 +44,19 @@ public class TicketController {
     @GetMapping("/active")
     public String activeTickets(Model model){
         model.addAttribute("activeTickets", ticketService.getTicketsByCompletion(false));
+        model.addAttribute("collectedIds", new IdCheckboxWrapper());
+
         return "active-tickets";
     }
+
+    /*
+    @PostMapping("/active")
+    public String activeTicketsProcess(@ModelAttribute("collectedIds") List<Ticket> collectedIds){
+        System.out.println(collectedIds);
+        return "redirect:/tickets/active";
+    }
+     */
+
 
     @GetMapping("/completed")
     public String completedTickets(Model model){
@@ -55,7 +68,8 @@ public class TicketController {
     public String addTicket(Model model, HttpServletRequest request){
 
         // session attribute which indicates page the request is coming from - used in later redirects
-        request.getSession().setAttribute("ticketAddReferer", request.getHeader("Referer"));
+        //request.getSession().setAttribute("referer", request.getHeader("Referer"));
+        setReferer(request);
 
         // create ticket
         Ticket ticket = new Ticket();
@@ -86,12 +100,20 @@ public class TicketController {
         ticket.setRelatedUnit(unitService.findUnitById(unitId));
         ticketService.saveTicket(ticket);
 
-
+        /*
         String absoluteRedirectUrl = (String) request.getSession().getAttribute("ticketAddReferer");
         String trimmedRedirectUrl = absoluteRedirectUrl.split(request.getContextPath())[1];
         request.getSession().removeAttribute("ticketAddReferer");
+         */
 
-        return "redirect:" + trimmedRedirectUrl;
+        return "redirect:" + previousUrlExtractor(request);
+    }
+
+    @GetMapping("/delete")
+    public String deleteTicket(@RequestParam("id") int ticketId, HttpServletRequest request){
+        setReferer(request);
+        ticketService.deleteTicket(ticketId);
+        return "redirect:" + previousUrlExtractor(request);
     }
 
     @GetMapping("/units")
@@ -119,5 +141,17 @@ public class TicketController {
 
         unitService.saveUnit(unit);
         return "redirect:/tickets/units/unit?id=" + unit.getId();
+    }
+
+    private void setReferer(HttpServletRequest request){
+        request.getSession().setAttribute("referer", request.getHeader("Referer"));
+    }
+
+    private String previousUrlExtractor(HttpServletRequest request){
+        String absoluteRedirectUrl = (String) request.getSession().getAttribute("referer");
+        String trimmedRedirectUrl = absoluteRedirectUrl.split(request.getContextPath())[1];
+        request.getSession().removeAttribute("referer");
+
+        return trimmedRedirectUrl;
     }
 }

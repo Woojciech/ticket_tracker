@@ -13,6 +13,7 @@
 </head>
 <body>
     <div>
+
         <h1>Unit - ${unit.name}</h1>
 
         <h3>${unit.description}</h3>
@@ -65,6 +66,8 @@
                 </c:forEach>
             </tbody>
         </table>
+
+        <a href="${pageContext.request.contextPath}/tickets/units">back to units</a>
     </div>
 
 </body>

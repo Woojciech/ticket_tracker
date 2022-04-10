@@ -24,6 +24,8 @@
 
             <input type="submit" value="Save"/>
         </form:form>
+
+        <a href="${pageContext.request.getHeader("Referer")}">Back</a>
     </div>
 </body>
 </html>

@@ -26,7 +26,9 @@ public class TicketDAOImpl implements TicketDAO {
 
     @Override
     public Ticket findTicketById(int ticketId) {
-        return null;
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        return currentSession.get(Ticket.class, ticketId);
     }
 
     @Override
@@ -36,7 +38,10 @@ public class TicketDAOImpl implements TicketDAO {
 
     @Override
     public void deleteTicket(int ticketId) {
+        Session currentSession = sessionFactory.getCurrentSession();
 
+        Ticket deletedTicket = findTicketById(ticketId);
+        currentSession.delete(deletedTicket);
     }
 
     @Override
