@@ -33,7 +33,9 @@ public class TicketDAOImpl implements TicketDAO {
 
     @Override
     public void updateTicket(Ticket ticket) {
+        Session currentSession = sessionFactory.getCurrentSession();
 
+        currentSession.update(ticket);
     }
 
     @Override
@@ -69,12 +71,26 @@ public class TicketDAOImpl implements TicketDAO {
     }
 
     @Override
-    public List<Ticket> getTicketsByCompletion(boolean isCompleted) {
+    public List<Ticket> getTicketsByCompletionPaginate(boolean isCompleted, int pageSize, int pageNumber) {
         Session currentSession = sessionFactory.getCurrentSession();
 
         Query<Ticket> query = currentSession.createQuery("from Ticket where isCompleted = :isCompleted");
         query.setParameter("isCompleted", isCompleted);
+        query.setFirstResult(pageNumber * pageSize);
+        query.setMaxResults(pageSize);
 
         return query.getResultList();
     }
+
+    @Override
+    public Long countTicketsByCompletion(boolean isCompleted) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Long> query = currentSession.createQuery("select count(t.id) from Ticket t where t.isCompleted = :isCompleted");
+        query.setParameter("isCompleted", isCompleted);
+
+        return query.getSingleResult();
+    }
+
+
 }

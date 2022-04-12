@@ -4,7 +4,6 @@ import com.suszkolabs.entity.Ticket;
 import com.suszkolabs.entity.Unit;
 import com.suszkolabs.service.TicketService;
 import com.suszkolabs.service.UnitService;
-import com.suszkolabs.utils.IdCheckboxWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/tickets")
@@ -28,6 +26,8 @@ public class TicketController {
     private TicketService ticketService;
     @Autowired
     private UnitService unitService;
+
+    private static final int PAGE_SIZE = 20;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
@@ -43,25 +43,69 @@ public class TicketController {
 
     @GetMapping("/active")
     public String activeTickets(Model model){
-        model.addAttribute("activeTickets", ticketService.getTicketsByCompletion(false));
-        model.addAttribute("collectedIds", new IdCheckboxWrapper());
 
+        /*
+        Long activeTicketsCount = ticketService.countTicketsByCompletion(false);
+        model.addAttribute("pagesCount", activeTicketsCount / PAGE_SIZE);
+        model.addAttribute("activeTickets", ticketService.getTicketsByCompletionPaginate(false, PAGE_SIZE, 0));
+         */
+        preparePagination(1, model, false);
         return "active-tickets";
     }
 
-    /*
-    @PostMapping("/active")
-    public String activeTicketsProcess(@ModelAttribute("collectedIds") List<Ticket> collectedIds){
-        System.out.println(collectedIds);
-        return "redirect:/tickets/active";
+    @GetMapping("/active/{pageNumber}")
+    public String activeTicketsPage(@PathVariable(value="pageNumber") int pageNumber, Model model){
+        /*
+        Long activeTicketsCount = ticketService.countTicketsByCompletion(false);
+        model.addAttribute("pagesCount", activeTicketsCount / PAGE_SIZE);
+        model.addAttribute("activeTickets", ticketService.getTicketsByCompletionPaginate(false, PAGE_SIZE, pageNumber - 1));
+         */
+        preparePagination(pageNumber, model, false);
+        return "active-tickets";
     }
-     */
-
 
     @GetMapping("/completed")
     public String completedTickets(Model model){
-        model.addAttribute("completedTickets", ticketService.getTicketsByCompletion(true));
+        /*
+        Long completedTicketsCount = ticketService.countTicketsByCompletion(true);
+        model.addAttribute("pagesCount", completedTicketsCount / PAGE_SIZE);
+        model.addAttribute("completedTickets", ticketService.getTicketsByCompletionPaginate(true, PAGE_SIZE, 0));
+         */
+        preparePagination(1, model, true);
         return "completed-tickets";
+    }
+
+    @GetMapping("/completed/{pageNumber}")
+    public String completedTicketsPage(@PathVariable(value="pageNumber") int pageNumber, Model model){
+
+        preparePagination(pageNumber, model, true);
+
+        /*
+        Long completedTicketsCount = ticketService.countTicketsByCompletion(true);
+        model.addAttribute("pagesCount", completedTicketsCount / PAGE_SIZE);
+        model.addAttribute("completedTickets", ticketService.getTicketsByCompletionPaginate(true, PAGE_SIZE, pageNumber - 1));
+         */
+        return "completed-tickets";
+    }
+
+    private void preparePagination(int pageNumber, Model model, boolean completionStatus){
+        Long ticketsCount = ticketService.countTicketsByCompletion(completionStatus);
+        long pageCount = 0;
+        if(ticketsCount % (long) PAGE_SIZE == 0)
+           pageCount = ticketsCount / PAGE_SIZE;
+        else
+            pageCount = (ticketsCount / PAGE_SIZE) + 1;
+
+        model.addAttribute("pagesCount", pageCount);
+        model.addAttribute("tickets", ticketService.getTicketsByCompletionPaginate(completionStatus, PAGE_SIZE, pageNumber - 1));
+    }
+
+    @GetMapping("/changeCompletionStatus")
+    public String changeTicketStatus(@RequestParam("id") int ticketId, @RequestParam("currentStatus") boolean currentStatus, HttpServletRequest request){
+        ticketService.changeCompletionStatus(ticketId, currentStatus);
+
+        setReferer(request);
+        return "redirect:" + previousUrlExtractor(request);
     }
 
     @GetMapping("/add")

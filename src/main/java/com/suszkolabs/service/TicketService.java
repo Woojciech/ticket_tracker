@@ -12,5 +12,9 @@ public interface TicketService {
     void deleteTicket(int ticketId);
     List<Ticket> getAllTickets();
     List<Ticket> getLimitedTicketsByCompletion(int limit);
-    List<Ticket> getTicketsByCompletion(boolean isCompleted);
+    List<Ticket> getTicketsByCompletionPaginate(boolean isCompleted, int pageSize, int pageNumber);
+
+    Long countTicketsByCompletion(boolean isCompleted);
+    void changeCompletionStatus(int ticketId, boolean currentStatus);
+
 }

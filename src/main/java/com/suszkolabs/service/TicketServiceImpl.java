@@ -59,7 +59,22 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     @Transactional
-    public List<Ticket> getTicketsByCompletion(boolean isCompleted) {
-        return ticketDAO.getTicketsByCompletion(isCompleted);
+    public List<Ticket> getTicketsByCompletionPaginate(boolean isCompleted, int pageSize, int pageNumber) {
+        return ticketDAO.getTicketsByCompletionPaginate(isCompleted, pageSize, pageNumber);
     }
+
+    @Override
+    @Transactional
+    public Long countTicketsByCompletion(boolean isCompleted) {
+        return ticketDAO.countTicketsByCompletion(isCompleted);
+    }
+
+    @Override
+    @Transactional
+    public void changeCompletionStatus(int ticketId, boolean currentStatus){
+        Ticket ticket = ticketDAO.findTicketById(ticketId);
+        ticket.setCompleted(!currentStatus);
+        ticketDAO.updateTicket(ticket);
+    }
+
 }

@@ -29,18 +29,26 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="ticket" items="${activeTickets}">
+            <c:forEach var="ticket" items="${tickets}">
                 <tr>
                     <td>${ticket.title}</td>
                     <td>${ticket.description}</td>
                     <td>${ticket.dateAdded}</td>
                     <td>${ticket.relatedUnit.name}</td>
                     <td><a href="delete?id=${ticket.id}">Delete</a></td>
+                    <td><a href="update?id=${ticket.id}">Update</a></td>
+                    <td><a href="${pageContext.request.contextPath}/tickets/changeCompletionStatus?id=${ticket.id}&currentStatus=${ticket.completed}">Change completion</a></td>
                 </tr>
             </c:forEach>
             </tbody>
         </table>
         <!-- <input type="submit" value="delete selected"/> -->
+        <ul>
+            <li><a href="${pageContext.request.contextPath}/tickets/active">1</a></li>
+            <c:forEach var="i" begin="2" end="${pagesCount}">
+                <li><a href="${pageContext.request.contextPath}/tickets/active/${i}">${i}</a></li>
+            </c:forEach>
+        </ul>
     </div>
     <!-- </form:form> -->
 </body>

@@ -12,6 +12,6 @@ public interface TicketDAO {
     void deleteTicket(int ticketId);
     List<Ticket> getAllTickets();
     List<Ticket> getLimitedTicketsByCompletion(boolean isCompleted, int limit);
-    List<Ticket> getTicketsByCompletion(boolean isCompleted);
-
+    List<Ticket> getTicketsByCompletionPaginate(boolean isCompleted, int pageSize, int pageNumber);
+    Long countTicketsByCompletion(boolean isCompleted);
 }
