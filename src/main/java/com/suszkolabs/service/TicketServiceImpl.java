@@ -31,7 +31,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     @Transactional
     public void updateTicket(Ticket ticket) {
-
+        ticketDAO.updateTicket(ticket);
     }
 
     @Override
@@ -65,8 +65,20 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     @Transactional
+    public List<Ticket> getUnitTicketsByCompletionPaginate(int unitId, boolean isCompleted, int pageSize, int pageNumber) {
+        return ticketDAO.getUnitTicketsByCompletionPaginate(unitId, isCompleted, pageSize, pageNumber);
+    }
+
+    @Override
+    @Transactional
     public Long countTicketsByCompletion(boolean isCompleted) {
         return ticketDAO.countTicketsByCompletion(isCompleted);
+    }
+
+    @Override
+    @Transactional
+    public Long countUnitTicketsByCompletion(int unitId, boolean isCompleted) {
+        return ticketDAO.countUnitTicketsByCompletion(unitId, isCompleted);
     }
 
     @Override

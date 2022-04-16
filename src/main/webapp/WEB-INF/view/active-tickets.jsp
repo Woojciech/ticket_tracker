@@ -29,7 +29,7 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="ticket" items="${tickets}">
+            <c:forEach var="ticket" items="${activeTickets}">
                 <tr>
                     <td>${ticket.title}</td>
                     <td>${ticket.description}</td>
@@ -45,7 +45,7 @@
         <!-- <input type="submit" value="delete selected"/> -->
         <ul>
             <li><a href="${pageContext.request.contextPath}/tickets/active">1</a></li>
-            <c:forEach var="i" begin="2" end="${pagesCount}">
+            <c:forEach var="i" begin="2" end="${pageCountActive}">
                 <li><a href="${pageContext.request.contextPath}/tickets/active/${i}">${i}</a></li>
             </c:forEach>
         </ul>

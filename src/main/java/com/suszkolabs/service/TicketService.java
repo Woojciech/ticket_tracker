@@ -13,8 +13,10 @@ public interface TicketService {
     List<Ticket> getAllTickets();
     List<Ticket> getLimitedTicketsByCompletion(int limit);
     List<Ticket> getTicketsByCompletionPaginate(boolean isCompleted, int pageSize, int pageNumber);
+    List<Ticket> getUnitTicketsByCompletionPaginate(int unitId, boolean isCompleted, int pageSize, int pageNumber);
 
     Long countTicketsByCompletion(boolean isCompleted);
+    Long countUnitTicketsByCompletion(int unitId, boolean isCompleted);
     void changeCompletionStatus(int ticketId, boolean currentStatus);
 
 }

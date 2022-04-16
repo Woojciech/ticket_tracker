@@ -83,10 +83,34 @@ public class TicketDAOImpl implements TicketDAO {
     }
 
     @Override
+    public List<Ticket> getUnitTicketsByCompletionPaginate(int unitId, boolean isCompleted, int pageSize, int pageNumber) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Ticket> query = currentSession.createQuery("from Ticket t where t.isCompleted = :isCompleted and t.relatedUnit.id = :unitId");
+        query.setParameter("isCompleted", isCompleted);
+        query.setParameter("unitId", unitId);
+        query.setFirstResult(pageNumber * pageSize);
+        query.setMaxResults(pageSize);
+
+        return query.getResultList();
+    }
+
+    @Override
     public Long countTicketsByCompletion(boolean isCompleted) {
         Session currentSession = sessionFactory.getCurrentSession();
 
         Query<Long> query = currentSession.createQuery("select count(t.id) from Ticket t where t.isCompleted = :isCompleted");
+        query.setParameter("isCompleted", isCompleted);
+
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Long countUnitTicketsByCompletion(int unitId, boolean isCompleted) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Long> query = currentSession.createQuery("select count(t.id) from Ticket t where t.relatedUnit.id = :unitId and t.isCompleted = :isCompleted");
+        query.setParameter("unitId", unitId);
         query.setParameter("isCompleted", isCompleted);
 
         return query.getSingleResult();

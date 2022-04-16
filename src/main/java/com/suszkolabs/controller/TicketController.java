@@ -13,6 +13,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -20,14 +21,14 @@ import javax.validation.Valid;
 public class TicketController {
 
     //TODO make a limit as an user-defined option
-    //TODO add checkboxes responsible for completion/incompletion of certain tickets
+    //TODO add checkboxes responsible for completion/incompletion of certain completedTickets
 
     @Autowired
     private TicketService ticketService;
     @Autowired
     private UnitService unitService;
 
-    private static final int PAGE_SIZE = 20;
+    private static final int PAGE_SIZE = 10;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder){
@@ -49,7 +50,7 @@ public class TicketController {
         model.addAttribute("pagesCount", activeTicketsCount / PAGE_SIZE);
         model.addAttribute("activeTickets", ticketService.getTicketsByCompletionPaginate(false, PAGE_SIZE, 0));
          */
-        preparePagination(1, model, false);
+        prepareGeneralPagination(1, model, false);
         return "active-tickets";
     }
 
@@ -60,7 +61,7 @@ public class TicketController {
         model.addAttribute("pagesCount", activeTicketsCount / PAGE_SIZE);
         model.addAttribute("activeTickets", ticketService.getTicketsByCompletionPaginate(false, PAGE_SIZE, pageNumber - 1));
          */
-        preparePagination(pageNumber, model, false);
+        prepareGeneralPagination(pageNumber, model, false);
         return "active-tickets";
     }
 
@@ -71,14 +72,14 @@ public class TicketController {
         model.addAttribute("pagesCount", completedTicketsCount / PAGE_SIZE);
         model.addAttribute("completedTickets", ticketService.getTicketsByCompletionPaginate(true, PAGE_SIZE, 0));
          */
-        preparePagination(1, model, true);
+        prepareGeneralPagination(1, model, true);
         return "completed-tickets";
     }
 
     @GetMapping("/completed/{pageNumber}")
     public String completedTicketsPage(@PathVariable(value="pageNumber") int pageNumber, Model model){
 
-        preparePagination(pageNumber, model, true);
+        prepareGeneralPagination(pageNumber, model, true);
 
         /*
         Long completedTicketsCount = ticketService.countTicketsByCompletion(true);
@@ -88,7 +89,7 @@ public class TicketController {
         return "completed-tickets";
     }
 
-    private void preparePagination(int pageNumber, Model model, boolean completionStatus){
+    private void prepareGeneralPagination(int pageNumber, Model model, boolean completionStatus){
         Long ticketsCount = ticketService.countTicketsByCompletion(completionStatus);
         long pageCount = 0;
         if(ticketsCount % (long) PAGE_SIZE == 0)
@@ -96,8 +97,32 @@ public class TicketController {
         else
             pageCount = (ticketsCount / PAGE_SIZE) + 1;
 
-        model.addAttribute("pagesCount", pageCount);
-        model.addAttribute("tickets", ticketService.getTicketsByCompletionPaginate(completionStatus, PAGE_SIZE, pageNumber - 1));
+
+        if(completionStatus) {
+            model.addAttribute("pageCountCompleted", pageCount);
+            model.addAttribute("completedTickets", ticketService.getTicketsByCompletionPaginate(true, PAGE_SIZE, pageNumber - 1));
+        }else {
+            model.addAttribute("pageCountActive", pageCount);
+            model.addAttribute("activeTickets", ticketService.getTicketsByCompletionPaginate(false, PAGE_SIZE, pageNumber - 1));
+        }
+    }
+
+    private void prepareUnitPagination(int unitId, int pageNumber, Model model, boolean completionStatus){
+        Long ticketsCount = ticketService.countUnitTicketsByCompletion(unitId, completionStatus);
+        long pageCount = 0;
+        if(ticketsCount % (long) PAGE_SIZE == 0)
+            pageCount = ticketsCount / PAGE_SIZE;
+        else
+            pageCount = (ticketsCount / PAGE_SIZE) + 1;
+
+
+        if(completionStatus) {
+            model.addAttribute("pageCountCompleted", pageCount);
+            model.addAttribute("completedTickets", ticketService.getUnitTicketsByCompletionPaginate(unitId,true, PAGE_SIZE, pageNumber - 1));
+        }else {
+            model.addAttribute("pageCountActive", pageCount);
+            model.addAttribute("activeTickets", ticketService.getUnitTicketsByCompletionPaginate(unitId,false, PAGE_SIZE, pageNumber - 1));
+        }
     }
 
     @GetMapping("/changeCompletionStatus")
@@ -123,7 +148,7 @@ public class TicketController {
         // form object binding attributes
         model.addAttribute("ticket", ticket);
         model.addAttribute("units", unitService.getAllUnits());
-        return "ticket-form";
+        return "ticket-form-add";
     }
 
     //TODO - to much logic in a controller?
@@ -133,17 +158,20 @@ public class TicketController {
         if(bindingResult.hasErrors()) {
             // units are fetched on each error, it is by no means an optimal solution, is there a way to avoid it?
             model.addAttribute("units", unitService.getAllUnits());
-            return "ticket-form";
+            return "ticket-form-add";
         }
         ticket.setDateNow();
 
         // form binds actual unitId to new Unit object passed in "addTicket" (GET request)
-        // then the id is used to fetch the entire Unit from the database
+        // then the id is used to fetch Unit from the database
         // ticket "relatedUnit" field is set to fetched Unit
+        /*
         int unitId = ticket.getRelatedUnit().getId();
         ticket.setRelatedUnit(unitService.findUnitById(unitId));
         ticketService.saveTicket(ticket);
-
+         */
+        setRelatedTicketUnit(ticket);
+        ticketService.saveTicket(ticket);
         /*
         String absoluteRedirectUrl = (String) request.getSession().getAttribute("ticketAddReferer");
         String trimmedRedirectUrl = absoluteRedirectUrl.split(request.getContextPath())[1];
@@ -151,6 +179,47 @@ public class TicketController {
          */
 
         return "redirect:" + previousUrlExtractor(request);
+    }
+
+
+    //TODO - switch findTicketById return type to optional
+    @GetMapping("/update")
+    public String updateTicketForm(@RequestParam("id") int ticketId, Model model, HttpServletRequest request){
+        setReferer(request);
+
+        Ticket updatedTicket = ticketService.findTicketById(ticketId);
+        model.addAttribute("updatedTicket", updatedTicket);
+        model.addAttribute("units", unitService.getAllUnits());
+
+        request.getSession().setAttribute("previousUnitId", updatedTicket.getRelatedUnit().getId());
+        return "ticket-form-update";
+    }
+
+    @PostMapping("/update")
+    public String updateTicketProcess(Model model, @Valid @ModelAttribute("updatedTicket") Ticket updatedTicket, BindingResult bindingResult, HttpServletRequest request){
+        if(bindingResult.hasErrors()){
+            model.addAttribute("units", unitService.getAllUnits());
+            return "ticket-form-update";
+        }
+
+        HttpSession session = request.getSession();
+
+        if(updatedTicket.getRelatedUnit().getId() != (int) session.getAttribute("previousUnitId"))
+            setRelatedTicketUnit(updatedTicket);
+
+        ticketService.updateTicket(updatedTicket);
+
+        session.removeAttribute("previousUnitId");
+
+        return "redirect:" + previousUrlExtractor(request);
+    }
+
+    // form binds actual unitId to new Unit object passed in "addTicket" (GET request)
+    // then the id is used to fetch Unit from the database
+    // ticket "relatedUnit" field is set to fetched Unit
+    private void setRelatedTicketUnit(Ticket ticket){
+        int unitId = ticket.getRelatedUnit().getId();
+        ticket.setRelatedUnit(unitService.findUnitById(unitId));
     }
 
     @GetMapping("/delete")
@@ -166,10 +235,63 @@ public class TicketController {
         return "display-units";
     }
 
-    @GetMapping("/units/unit")
-    public String showUnit(@RequestParam(value = "id") int id, Model model){
-        model.addAttribute("unit", unitService.findUnitByIdEager(id));
+
+    @GetMapping(value = {"/units/unit"})
+    public String showUnit(@RequestParam("id") int id, @RequestParam(value = "active", required = false) Integer activePage,
+                           @RequestParam(value = "completed", required = false) Integer completedPage, Model model, HttpServletRequest request){
+        model.addAttribute("unit", unitService.findUnitById(id));
+
+        HttpSession session = request.getSession();
+        Integer previousActivePage = (Integer) session.getAttribute("previousActivePage");
+        Integer previousCompletedPage = (Integer) session.getAttribute("previousCompletedPage");
+
+        // initial get request
+        if(activePage == null && completedPage == null) {
+            prepareUnitPagination(id,1, model, false);
+            session.setAttribute("previousActivePage", 1);
+
+            prepareUnitPagination(id,1, model, true);
+            session.setAttribute("previousCompletedPage", 1);
+        }
+        else if(activePage > previousActivePage)
+            switchPage(id, model, session, true, true, previousActivePage, previousCompletedPage);
+        else if(completedPage > previousCompletedPage)
+            switchPage(id, model, session, false, true, previousActivePage, previousCompletedPage);
+        else if(activePage < previousActivePage)
+            switchPage(id, model, session, true, false, previousActivePage, previousCompletedPage);
+        else if(completedPage < previousCompletedPage)
+            switchPage(id, model, session, false, false, previousActivePage, previousCompletedPage);
+        else{
+            prepareUnitPagination(id, previousActivePage, model, false);
+            prepareUnitPagination(id, previousCompletedPage, model, true);
+        }
+
         return "unit-details";
+    }
+
+    private void switchPage(int unitId, Model model, HttpSession session, boolean isActiveSwitched, boolean isForwardSwitch, Integer previousActivePage, Integer previousCompletedPage){
+        int newPageNumber;
+        if(isActiveSwitched){
+            if(isForwardSwitch)
+                newPageNumber = previousActivePage + 1;
+            else
+                newPageNumber = previousActivePage - 1;
+
+            prepareUnitPagination(unitId, newPageNumber, model, false);
+            session.setAttribute("previousActivePage", newPageNumber);
+
+            prepareUnitPagination(unitId, previousCompletedPage, model, true);
+        }else{
+            if(isForwardSwitch)
+                newPageNumber = previousCompletedPage + 1;
+            else
+                newPageNumber = previousCompletedPage - 1;
+
+            prepareUnitPagination(unitId,newPageNumber, model, true);
+            session.setAttribute("previousCompletedPage", newPageNumber);
+
+            prepareUnitPagination(unitId, previousActivePage, model, false);
+        }
     }
 
     @GetMapping("/units/add")
@@ -184,9 +306,10 @@ public class TicketController {
             return "unit-form";
 
         unitService.saveUnit(unit);
-        return "redirect:/tickets/units/unit?id=" + unit.getId();
+        return "redirect:/completedTickets/units/unit?id=" + unit.getId();
     }
 
+    // session attribute which indicates page the request is coming from - used in later redirects
     private void setReferer(HttpServletRequest request){
         request.getSession().setAttribute("referer", request.getHeader("Referer"));
     }

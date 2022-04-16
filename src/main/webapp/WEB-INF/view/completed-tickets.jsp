@@ -28,7 +28,7 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="ticket" items="${tickets}">
+            <c:forEach var="ticket" items="${completedTickets}">
                 <tr>
                     <td>${ticket.title}</td>
                     <td>${ticket.description}</td>
@@ -43,7 +43,7 @@
         </table>
         <ul>
             <li><a href="${pageContext.request.contextPath}/tickets/completed">1</a></li>
-            <c:forEach var="i" begin="2" end="${pagesCount}">
+            <c:forEach var="i" begin="2" end="${pageCountCompleted}">
                 <li><a href="${pageContext.request.contextPath}/tickets/completed/${i}">${i}</a></li>
             </c:forEach>
         </ul>

@@ -10,7 +10,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Ticket</title>
+    <title>New Ticket</title>
 </head>
 <body>
     <form:form action="${pageContext.request.contextPath}/tickets/add" method="post" modelAttribute="ticket">
