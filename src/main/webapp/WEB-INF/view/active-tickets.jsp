@@ -12,44 +12,61 @@
 <html>
 <head>
     <title>Active Tickets</title>
+    <jsp:include page="segments/header.jsp"/>
 </head>
 <body>
-    <!-- TODO use JSP segments -->
-    <!-- <form:form action="" method="post"> -->
-    <div>
-        <jsp:include page="segments/navbar.jsp"/>
-        <h1>Your active tickets</h1>
-        <table>
-            <thead>
-            <tr>
-                <td>title</td>
-                <td>description</td>
-                <td>post date</td>
-                <td>associated unit</td>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="ticket" items="${activeTickets}">
+    <jsp:include page="segments/navbar.jsp"/>
+
+    <div class="container">
+        <div class="row mt-2">
+            <div class="text-center">
+                <h1>Active Tickets</h1>
+                <p>Here you can see all of your active tickets regardless of unit they belong to</p>
+            </div>
+        </div>
+
+        <div class="row mt-2 mb-5">
+            <table class="table table-bordered table-hover">
+                <caption style="caption-side: top; color: black">
+                    <h4>Active Tickets</h4>
+                </caption>
+                <thead class="table-dark">
                 <tr>
-                    <td>${ticket.title}</td>
-                    <td>${ticket.description}</td>
-                    <td>${ticket.dateAdded}</td>
-                    <td>${ticket.relatedUnit.name}</td>
-                    <td><a href="delete?id=${ticket.id}">Delete</a></td>
-                    <td><a href="update?id=${ticket.id}">Update</a></td>
-                    <td><a href="${pageContext.request.contextPath}/tickets/changeCompletionStatus?id=${ticket.id}&currentStatus=${ticket.completed}">Change completion</a></td>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Post date</th>
+                    <th scope="col">Associated unit</th>
+                    <th scope="col">Delete</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Completion status</th>
                 </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-        <!-- <input type="submit" value="delete selected"/> -->
-        <ul>
-            <li><a href="${pageContext.request.contextPath}/tickets/active">1</a></li>
-            <c:forEach var="i" begin="2" end="${pageCountActive}">
-                <li><a href="${pageContext.request.contextPath}/tickets/active/${i}">${i}</a></li>
-            </c:forEach>
-        </ul>
+                </thead>
+                <tbody>
+                    <c:forEach var="ticket" items="${activeTickets}">
+                        <tr>
+                            <td>${ticket.title}</td>
+                            <td>${ticket.description}</td>
+                            <td>${ticket.dateAdded}</td>
+                            <td>${ticket.relatedUnit.name}</td>
+                            <td><a href="${pageContext.request.contextPath}/tickets/delete?id=${ticket.id}">Delete</a></td>
+                            <td><a href="${pageContext.request.contextPath}/tickets/update?id=${ticket.id}">Update</a></td>
+                            <td><a href="${pageContext.request.contextPath}/tickets/changeCompletionStatus?id=${ticket.id}&currentStatus=${ticket.completed}">Change</a></td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/active">1</a></li>
+                    <c:forEach var="i" begin="2" end="${pageCountActive}">
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/active/${i}">${i}</a></li>
+                    </c:forEach>
+                </ul>
+            </nav>
+
+        </div>
     </div>
-    <!-- </form:form> -->
+
 </body>
 </html>

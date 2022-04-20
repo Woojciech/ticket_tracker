@@ -43,12 +43,17 @@ public class UnitDAOImpl implements UnitDAO {
 
     @Override
     public void updateUnit(Unit unit) {
+        Session currentSession = sessionFactory.getCurrentSession();
 
+        currentSession.update(unit);
     }
 
     @Override
     public void deleteUnit(int unitId) {
+        Session currentSession = sessionFactory.getCurrentSession();
 
+        Unit deletedUnit = findUnitById(unitId);
+        currentSession.delete(deletedUnit);
     }
 
     @Override
@@ -61,11 +66,31 @@ public class UnitDAOImpl implements UnitDAO {
     }
 
     @Override
+    public List<Unit> getUnitsPaginate(int pageNumber, int pageSize) {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Unit> query = currentSession.createQuery("from Unit");
+        query.setFirstResult(pageNumber * pageSize);
+        query.setMaxResults(pageSize);
+
+        return query.getResultList();
+    }
+
+    @Override
     public List<Unit> getAllUnitsEager() {
         Session currentSession = sessionFactory.getCurrentSession();
 
         Query<Unit> query = currentSession.createQuery("from Unit u left join fetch u.relatedTickets");
 
         return query.getResultList();
+    }
+
+    @Override
+    public Long getUnitsCount() {
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        Query<Long> query = currentSession.createQuery("select count(id) from Unit");
+
+        return query.getSingleResult();
     }
 }

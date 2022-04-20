@@ -1,1 +1,1 @@
-<% response.sendRedirect("completedTickets/dashboard"); %>
+<% response.sendRedirect("tickets/dashboard"); %>

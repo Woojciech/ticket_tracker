@@ -11,15 +11,84 @@
 <html>
 <head>
     <title>Dashboard</title>
+    <jsp:include page="segments/header.jsp"/>
 </head>
 <body>
-    <h1>Welcome to dashboard!</h1>
-
     <!-- TODO add switch in the corner between ticket/unit dashboard -->
     <jsp:include page="segments/navbar.jsp"/>
 
     <!-- TODO repair tables -->
     <!-- TODO add logic to move ticket from active to completed and vice versa -->
+    <div class="container">
+        <div class="row mt-4">
+            <div class="text-center">
+                <h1>Dashboard</h1>
+                <p>Here you can see the state of most recently added and completed tickets</p>
+            </div>
+
+        </div>
+
+        <div class="row mt-3 mb-5">
+            <table class="table table-bordered table-hover">
+                <caption style="caption-side: top; color: black">
+                    <h4>Active Tickets</h4>
+                </caption>
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Post date</th>
+                    <th scope="col">Associated unit</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="ticket" items="${dashboardTickets}" varStatus="counter1">
+                        <c:if test="${!ticket.completed}">
+                            <tr>
+                                <td>${counter1.count}</td>
+                                <td>${ticket.title}</td>
+                                <td>${ticket.description}</td>
+                                <td>${ticket.dateAdded}</td>
+                                <td>${ticket.relatedUnit.name}</td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row mt-5">
+            <table class="table table-bordered table-hover">
+                <caption style="caption-side: top; color: black">
+                    <h4>Completed Tickets</h4>
+                </caption>
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">No.</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Post date</th>
+                    <th scope="col">Associated unit</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="ticket" items="${dashboardTickets}" varStatus="counter">
+                        <c:if test="${ticket.completed}">
+                            <tr>
+                                <td>${counter.count}</td>
+                                <td>${ticket.title}</td>
+                                <td>${ticket.description}</td>
+                                <td>${ticket.dateAdded}</td>
+                                <td>${ticket.relatedUnit.name}</td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--
     <div>
         <h1>Recently added tickets</h1>
         <table>
@@ -71,6 +140,7 @@
             </tbody>
         </table>
     </div>
+    -->
 
 </body>
 </html>

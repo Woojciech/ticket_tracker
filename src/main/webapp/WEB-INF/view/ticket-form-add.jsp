@@ -11,36 +11,69 @@
 <html>
 <head>
     <title>New Ticket</title>
+    <jsp:include page="segments/header.jsp"/>
 </head>
 <body>
-    <form:form action="${pageContext.request.contextPath}/tickets/add" method="post" modelAttribute="ticket">
-        <form:hidden path="id"/>
 
-        Title: <form:input path="title"/>
-        <form:errors path="title"/>
+    <jsp:include page="segments/navbar.jsp"/>
 
-        Description: <form:input path="description"/>
-        <form:errors path="description"/>
 
-        <!-- TODO - object binding does not work :( - converter may be a solution (but how to use one) -->
-        Related Unit:
-        <form:select path="relatedUnit.id">
-            <c:forEach var="unit" items="${units}">
-                <form:option value="${unit.id}" label="${unit.name}"/>
-            </c:forEach>
-        </form:select>
+    <div class="container-fluid" style="height: 80%">
+        <div class="row mt-5">
+            <div class="text-center">
+                <h1>New Ticket</h1>
+                <p>Here you can add new ticket, choose your unit, completion status, fill in the details and enjoy!</p>
+            </div>
+        </div>
 
-        <form:hidden path="dateAdded"/>
+        <div class="row mt-3" style="height: 60%">
+            <div class="col-4 my-auto mx-auto">
+                <form:form action="${pageContext.request.contextPath}/tickets/add" method="post" modelAttribute="ticket">
 
-        Completion Status:
-        <form:select path="completed">
-            <form:option value="true" label="completed"/>
-            <form:option value="false" label="active"/>
-        </form:select>
+                    <form:hidden path="id"/>
 
-        <input type="submit" value="Save"/>
-    </form:form>
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <form:input class="form-control" id="title" path="title" placeholder="Enter title"/>
+                        <form:errors path="title"/>
+                    </div>
 
-    <a href="${pageContext.request.getHeader("Referer")}">Back</a>
+                    <div class="form-group mt-2">
+                        <label for="description">Description</label>
+                        <form:input class="form-control" path="description" id="description" placeholder="Enter description"/>
+                        <form:errors path="description"/>
+                    </div>
+
+                    <!-- TODO - object binding does not work :( - converter may be a solution (but how to use one) -->
+                    <div class="form-group mt-2">
+                        <label for="relatedUnit">Related unit</label>
+                        <form:select class="form-select" path="relatedUnit.id" id="relatedUnit">
+                            <c:forEach var="unit" items="${units}">
+                                <form:option value="${unit.id}" label="${unit.name}"/>
+                            </c:forEach>
+                        </form:select>
+                    </div>
+
+                    <form:hidden path="dateAdded"/>
+
+                    <div class="form-group mt-2">
+                        <label for="completionStatus">Completion status</label>
+                        <form:select class="form-select" path="completed" id="completionStatus">
+                            <form:option value="true" label="completed"/>
+                            <form:option value="false" label="active"/>
+                        </form:select>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <button type="button" class="btn btn-dark">Save</button>
+                    </div>
+                </form:form>
+                <!-- <button class="btn btn-info" onclick="${pageContext.request.getSession().getAttribute("referer")}">Back</button> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- <jsp:include page="segments/previous-page-redirect.jsp"/> -->
+
 </body>
 </html>

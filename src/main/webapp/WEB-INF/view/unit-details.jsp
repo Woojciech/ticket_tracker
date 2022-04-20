@@ -10,83 +10,105 @@
 <html>
 <head>
     <title>${unit.name}</title>
+    <jsp:include page="segments/header.jsp"/>
 </head>
 <body>
-    <div>
 
-        <h1>Unit - ${unit.name}</h1>
+    <jsp:include page="segments/navbar.jsp"/>
 
-        <h3>${unit.description}</h3>
-        <!--
-        <ul>
-            <li>${activeTickets.stream().filter(ticket -> ticket.completed == false).count()} active tickets</li>
-            <li>${completedTickets.stream().filter(ticket -> ticket.completed == true).count()} completed tickets</li>
+    <div class="container">
+        <div class="row mt-2">
+            <div class="text-center">
+                <h1>Unit - <a class="" href="${pageContext.request.contextPath}/tickets/units/update?id=${unit.id}">${unit.name}</a> in details</h1>
+                <p>${unit.description}</p>
+                <p>Click on Unit's name in order to update, you can also <a href="${pageContext.request.contextPath}/tickets/units/${pageContext.request.getSession().getAttribute("referencePage")}">get back</a> to units</p>
 
+            </div>
+        </div>
 
-            <li>${pageContext.request.getSession().getAttribute("pageCountActive") * 10} active tickets</li>
-            <li>${pageContext.request.getSession().getAttribute("pageCountCompleted") * 10} completed tickets</li>
-        </ul>
-        -->
-
-        <h2>Related active tickets</h2>
-        <table>
-            <thead>
+        <div class="row mt-2 mb-5">
+            <table class="table table-bordered table-hover">
+                <caption style="caption-side: top; color: black">
+                    <h4>Unit's Active Tickets</h4>
+                </caption>
+                <thead class="table-dark">
                 <tr>
-                    <td>Title</td>
-                    <td>Description</td>
-                    <td>Date added</td>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Post date</th>
+                    <th scope="col">Associated unit</th>
+                    <th scope="col">Delete</th>
+                    <th scope="col">Update</th>
+                    <th scope="col">Completion status</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <c:forEach var="ticket" items="${activeTickets}">
-                    <c:if test="${ticket.completed eq false}">
-                        <tr>
-                            <td>${ticket.title}</td>
-                            <td>${ticket.description}</td>
-                            <td>${ticket.dateAdded}</td>
-                        </tr>
-                    </c:if>
+                    <tr>
+                        <td>${ticket.title}</td>
+                        <td>${ticket.description}</td>
+                        <td>${ticket.dateAdded}</td>
+                        <td>${ticket.relatedUnit.name}</td>
+                        <td><a href="${pageContext.request.contextPath}/tickets/delete?id=${ticket.id}">Delete</a></td>
+                        <td><a href="${pageContext.request.contextPath}/tickets/update?id=${ticket.id}">Update</a></td>
+                        <td><a href="${pageContext.request.contextPath}/tickets/changeCompletionStatus?id=${ticket.id}&currentStatus=${ticket.completed}">Change</a></td>
+                    </tr>
                 </c:forEach>
-            </tbody>
-        </table>
-        <ul>
-            <li><a href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=1&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">1</a></li>
-            <c:forEach var="i" begin="2" end="${pageCountActive}">
-                <li><a href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${i}&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">${i}</a></li>
-            </c:forEach>
-        </ul>
+                </tbody>
+            </table>
 
-        <h2>Related completed tickets</h2>
-        <table>
-            <thead>
-            <tr>
-                <td>Title</td>
-                <td>Description</td>
-                <td>Date added</td>
-                <td></td>
-            </tr>
-            </thead>
-            <tbody>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=1&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">1</a></li>
+                    <c:forEach var="i" begin="2" end="${pageCountActive}">
+                        <li class="page-item"><a href class="page-link"="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${i}&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">${i}</a></li>
+                    </c:forEach>
+                </ul>
+            </nav>
+
+        </div>
+
+        <div class="row mt-2 mb-5">
+            <table class="table table-bordered table-hover">
+                <caption style="caption-side: top; color: black">
+                    <h4>Unit's Completed Tickets</h4>
+                </caption>
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Post date</th>
+                        <th scope="col">Associated unit</th>
+                        <th scope="col">Delete</th>
+                        <th scope="col">Update</th>
+                        <th scope="col">Completion status</th>
+                    </tr>
+                </thead>
+                <tbody>
                 <c:forEach var="ticket" items="${completedTickets}">
-                    <c:if test="${ticket.completed}">
-                        <tr>
-                            <td>${ticket.title}</td>
-                            <td>${ticket.description}</td>
-                            <td>${ticket.dateAdded}</td>
-                        </tr>
-                    </c:if>
+                    <tr>
+                        <td>${ticket.title}</td>
+                        <td>${ticket.description}</td>
+                        <td>${ticket.dateAdded}</td>
+                        <td>${ticket.relatedUnit.name}</td>
+                        <td><a href="${pageContext.request.contextPath}/tickets/delete?id=${ticket.id}">Delete</a></td>
+                        <td><a href="${pageContext.request.contextPath}/tickets/update?id=${ticket.id}">Update</a></td>
+                        <td><a href="${pageContext.request.contextPath}/tickets/changeCompletionStatus?id=${ticket.id}&currentStatus=${ticket.completed}">Change</a></td>
+                    </tr>
                 </c:forEach>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <ul>
-            <li><a href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=1">1</a></li>
-            <c:forEach var="i" begin="2" end="${pageCountCompleted}">
-                <li><a href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=${i}">${i}</a></li>
-            </c:forEach>
-        </ul>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=1">1</a></li>
+                    <c:forEach var="i" begin="2" end="${pageCountCompleted}">
+                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=${i}">${i}</a></li>
+                    </c:forEach>
+                </ul>
+            </nav>
 
-        <a href="${pageContext.request.contextPath}/tickets/units">back to units</a>
+        </div>
     </div>
 
 </body>

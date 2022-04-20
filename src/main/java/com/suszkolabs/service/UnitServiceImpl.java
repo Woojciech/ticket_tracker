@@ -34,13 +34,13 @@ public class UnitServiceImpl implements UnitService {
     @Override
     @Transactional
     public void updateUnit(Unit unit) {
-
+        unitDAO.updateUnit(unit);
     }
 
     @Override
     @Transactional
     public void deleteUnit(int unitId) {
-
+        unitDAO.deleteUnit(unitId);
     }
 
     @Override
@@ -49,11 +49,23 @@ public class UnitServiceImpl implements UnitService {
         return unitDAO.getAllUnits();
     }
 
+    @Override
+    @Transactional
+    public List<Unit> getUnitsPaginate(int pageNumber, int pageSize) {
+        return unitDAO.getUnitsPaginate(pageNumber, pageSize);
+    }
+
     // eager fetch is optional
     @Override
     @Transactional
     public List<Unit> getAllUnitsEager() {
         return unitDAO.getAllUnitsEager();
+    }
+
+    @Override
+    @Transactional
+    public Long getUnitsCount() {
+        return unitDAO.getUnitsCount();
     }
 
 }
