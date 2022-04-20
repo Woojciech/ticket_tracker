@@ -59,9 +59,9 @@
 
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=1&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">1</a></li>
+                    <li class="page-item" id="active1"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=1&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">1</a></li>
                     <c:forEach var="i" begin="2" end="${pageCountActive}">
-                        <li class="page-item"><a href class="page-link"="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${i}&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">${i}</a></li>
+                        <li class="page-item" id="active${i}"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${i}&completed=${pageContext.request.getSession().getAttribute("previousCompletedPage")}">${i}</a></li>
                     </c:forEach>
                 </ul>
             </nav>
@@ -101,9 +101,9 @@
 
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=1">1</a></li>
+                    <li class="page-item" id="completed1"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=1">1</a></li>
                     <c:forEach var="i" begin="2" end="${pageCountCompleted}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=${i}">${i}</a></li>
+                        <li class="page-item" id="completed${i}"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/unit?id=${unit.id}&active=${pageContext.request.getSession().getAttribute("previousActivePage")}&completed=${i}">${i}</a></li>
                     </c:forEach>
                 </ul>
             </nav>
@@ -111,5 +111,36 @@
         </div>
     </div>
 
+    <script>
+        // retrieve URL and split it in order to receive current page number
+        let classId = window.location.href.split("active=")[1].split("&completed=");
+
+        let activeId = classId[0];
+        let completedId = classId[1];
+
+        console.log(activeId, completedId);
+
+
+
+        // grab page item
+        const elementActive = document.getElementById("active" + activeId);
+        const elementCompleted = document.getElementById("completed" + completedId);
+
+        // add active class
+        elementActive.classList.add("active");
+        elementCompleted.classList.add("active");
+
+        /*
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var scrollpos = localStorage.getItem("scrollpos");
+            if(scrollpos) window.scrollTo(0, scrollpos);
+        });
+
+        window.onbeforeunload = function(e){
+            localStorage.setItem("scrollpos", window.scrollY);
+        };
+         */
+
+    </script>
 </body>
 </html>

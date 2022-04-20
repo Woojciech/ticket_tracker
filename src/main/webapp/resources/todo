@@ -1,4 +1,4 @@
-1. email sender, alert when there are many incompleted tickets within 7 days
+1. email sender, alert when there are many incomplete tickets within 7 days
 2. add support for deleting/completing many tickets
 3. add support for updating tickets
 4. add support for pagination

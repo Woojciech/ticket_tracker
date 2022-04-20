@@ -247,13 +247,17 @@ public class TicketController {
         // initial get request
         if(activePage == null && completedPage == null) {
             prepareUnitPagination(id,1, model, false);
-            //session.setAttribute("previousActivePage", 1);
 
             prepareUnitPagination(id,1, model, true);
-            //session.setAttribute("previousCompletedPage", 1);
+
+            session.setAttribute("previousActivePage", 1);
+            session.setAttribute("previousCompletedPage", 1);
         }else{
             prepareUnitPagination(id, activePage, model, false);
             prepareUnitPagination(id, completedPage, model, true);
+
+            session.setAttribute("previousActivePage", activePage);
+            session.setAttribute("previousCompletedPage", completedPage);
         }
 
         /*

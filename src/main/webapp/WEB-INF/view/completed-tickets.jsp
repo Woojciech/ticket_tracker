@@ -58,14 +58,29 @@
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/completed">1</a></li>
+                    <li class="page-item" id="completed1"><a class="page-link" href="${pageContext.request.contextPath}/tickets/completed">1</a></li>
                     <c:forEach var="i" begin="2" end="${pageCountCompleted}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/completed/${i}">${i}</a></li>
+                        <li class="page-item" id="completed${i}"><a class="page-link" href="${pageContext.request.contextPath}/tickets/completed/${i}">${i}</a></li>
                     </c:forEach>
                 </ul>
             </nav>
 
         </div>
     </div>
+
+    <script type="text/javascript">
+        // retrieve URL and split it in order to receive current page number
+        let classId = window.location.href.split("/active/")[1];
+
+        if(classId === undefined)
+            classId = '1';
+
+        // grab page item
+        const element = document.getElementById("active" + classId);
+
+        // add active class
+        element.classList.add("active");
+
+    </script>
 </body>
 </html>

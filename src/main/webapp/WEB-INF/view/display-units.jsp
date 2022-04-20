@@ -47,16 +47,23 @@
                 </tbody>
             </table>
 
-            <nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/1">1</a></li>
+                    <li class="page-item" id="units1"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/1">1</a></li>
                     <c:forEach var="i" begin="2" end="${unitPageCount}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/${i}">${i}</a></li>
+                        <li class="page-item" id="units${i}"><a class="page-link" href="${pageContext.request.contextPath}/tickets/units/${i}">${i}</a></li>
                     </c:forEach>
                 </ul>
             </nav>
         </div>
     </div>
 
+    <script type="text/javascript">
+        let activePageId = window.location.href.split("/units/")[1];
+
+        let pageItem = document.getElementById("units" + activePageId);
+
+        pageItem.classList.add("active");
+    </script>
 </body>
 </html>
