@@ -20,17 +20,6 @@
 	<!-- Add support for conversion, formatting and validation support -->
 	<mvc:annotation-driven/>
 
-	<!-- Define custom converter used in ticket-form-add.jsp, in order to map Unit object with Ticket -->
-	<bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
-		<property name="converters">
-			<set>
-				<bean class="com.suszkolabs.converter.UnitConverter"/>
-			</set>
-		</property>
-	</bean>
-
-
-
 	<!-- Define Spring MVC view resolver -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
