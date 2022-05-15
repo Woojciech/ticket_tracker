@@ -25,7 +25,7 @@
         </div>
 
         <div class="row mt-2 mb-5">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover text-center">
                 <caption style="caption-side: top; color: black">
                     <h4>Active Tickets</h4>
                 </caption>

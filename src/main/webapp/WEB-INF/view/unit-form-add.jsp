@@ -41,13 +41,11 @@
                     </div>
 
                     <div class="form-group mt-2">
-                        <button type="button" class="btn btn-dark">Save</button>
+                        <button type="submit" class="btn btn-dark">Save</button>
                     </div>
                 </form:form>
             </div>
         </div>
     </div>
-
-    <jsp:include page="segments/previous-page-redirect.jsp"/>
 </body>
 </html>

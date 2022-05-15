@@ -26,7 +26,7 @@
         </div>
 
         <div class="row mt-2 mb-5">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover text-center">
                 <caption style="caption-side: top; color: black">
                     <h4>Completed Tickets</h4>
                 </caption>
@@ -70,13 +70,13 @@
 
     <script type="text/javascript">
         // retrieve URL and split it in order to receive current page number
-        let classId = window.location.href.split("/active/")[1];
+        let classId = window.location.href.split("/completed/")[1];
 
         if(classId === undefined)
             classId = '1';
 
         // grab page item
-        const element = document.getElementById("active" + classId);
+        const element = document.getElementById("completed" + classId);
 
         // add active class
         element.classList.add("active");

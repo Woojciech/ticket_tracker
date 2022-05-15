@@ -338,6 +338,7 @@ public class TicketController {
     }
 
 
+
     // session attribute which indicates page the request is coming from - used in later redirects
     private void setReferer(HttpServletRequest request){
         request.getSession().setAttribute("referer", request.getHeader("Referer"));

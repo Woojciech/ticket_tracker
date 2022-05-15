@@ -64,10 +64,9 @@
                     </div>
 
                     <div class="form-group mt-2">
-                        <button type="button" class="btn btn-dark">Save</button>
+                        <button type="submit" class="btn btn-dark">Save</button>
                     </div>
                 </form:form>
-                <!-- <button class="btn btn-info" onclick="${pageContext.request.getSession().getAttribute("referer")}">Back</button> -->
             </div>
         </div>
     </div>
